@@ -6,24 +6,9 @@ const router = require('koa-router')();
 const { koaBody } = require('koa-body');
 const jwt = require('koa-jwt');
 
-const { Sequelize } = require("sequelize");
-
 const userRouter = require('./api/user')
 const config = require('../config/appConfig.js')
-
-
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: config.sqlPath,
-    define: {
-      freezeTableName: true // stop auto-pluralization 
-    }
-  });
-
-const user = db.User;
-const agreement = db.Agreement;
-sequelize.sync()
-
+const db = require('../models')
 
 const app = new Koa();
 
@@ -31,10 +16,15 @@ app.use(koaBody());
 
 // custom 401 error handling
 app.use(function (ctx, next) {
+    // console.log(ctx.header.authorization)
+
     return next().catch((err) => {
         if (401 == err.status) {
             ctx.status = 401;
-            ctx.body = 'Protected resource, use Authorization header to get access\n';
+            // ctx.body = 'Protected resource, use Authorization header to get access\n';
+            ctx.body = {
+                error: err.originalError ? err.originalError.message : err.message
+              };
         } else {
             throw err;
         }
@@ -43,7 +33,8 @@ app.use(function (ctx, next) {
 
 // Unprotected middleware
 app.use(function (ctx, next) {
-    if (ctx.url.match(/^\/public/) ||ctx.url === "/") {
+    if (ctx.url === "/") {
+    // if (ctx.url.match(/^\/public/) || ctx.url === "/") {
         ctx.body = 'Buy Mutual Funds';
     } else {
         return next();
@@ -51,7 +42,10 @@ app.use(function (ctx, next) {
 });
 
 // Middleware below this line is only reached if JWT token is valid
-app.use(jwt({ secret: 'shared-secret' }).unless({ path: [/^\/public/, "/"] }));
+app.use(jwt({ 
+    secret: config.secret, debug: config.dev 
+    })
+    .unless({ path: [/^\/public/, "/"] }));
 
 // // Protected middleware
 // app.use(function (ctx) {
@@ -65,4 +59,13 @@ app.use(userRouter.allowedMethods());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(config.port);
+(async () => {
+    try {
+        await db.sequelize.sync({ alter: true })
+        console.log('db created.')
+        app.listen(config.port);
+    } catch (error) {
+        console.error(error.message);
+    }
+
+})();

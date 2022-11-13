@@ -9,3 +9,4 @@ npm install --save sequelize
 npm i bcrypt@5.0.1
 npm i koa-body
 npm install --save sequelize-cli
+npm i jsonwebtoken
