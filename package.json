@@ -1,0 +1,32 @@
+{
+  "name": "buymutualfund",
+  "version": "1.0.0",
+  "description": "metropia",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "koa": "^2.13.4",
+    "koa-body": "^6.0.1",
+    "koa-jwt": "^4.0.3",
+    "koa-router": "^12.0.0",
+    "sequelize": "^6.25.5",
+    "sequelize-cli": "^6.5.2",
+    "sqlite3": "^5.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production node --harmony app.js",
+    "dev": "NODE_ENV=development node --inspect --harmony app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvaWang/BuyMutualFund.git"
+  },
+  "author": "Ting Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/EvaWang/BuyMutualFund/issues"
+  },
+  "homepage": "https://github.com/EvaWang/BuyMutualFund#readme"
+}
