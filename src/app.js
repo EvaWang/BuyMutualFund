@@ -6,9 +6,12 @@ const router = require('koa-router')();
 const { koaBody } = require('koa-body');
 const jwt = require('koa-jwt');
 
-const userRouter = require('./api/user')
+const {userRouter} = require('./api/user')
+const {agreementRouter} = require('./api/agreement')
+const {accountRouter} = require('./api/account')
+// const {userRouter, UserCtl} = require('./api/user')
+// const {agreementRouter, AgreementCtl} = require('./api/agreement')
 const config = require('../config/appConfig.js')
-const db = require('../models')
 
 const app = new Koa();
 
@@ -34,7 +37,6 @@ app.use(function (ctx, next) {
 // Unprotected middleware
 app.use(function (ctx, next) {
     if (ctx.url === "/") {
-    // if (ctx.url.match(/^\/public/) || ctx.url === "/") {
         ctx.body = 'Buy Mutual Funds';
     } else {
         return next();
@@ -42,10 +44,7 @@ app.use(function (ctx, next) {
 });
 
 // Middleware below this line is only reached if JWT token is valid
-app.use(jwt({ 
-    secret: config.secret, debug: config.dev 
-    })
-    .unless({ path: [/^\/public/, "/"] }));
+app.use(jwt({ secret: config.secret, debug: config.dev }).unless({ path: [/^\/public/, "/"] }));
 
 // // Protected middleware
 // app.use(function (ctx) {
@@ -56,16 +55,19 @@ app.use(jwt({
 
 app.use(userRouter.routes());
 app.use(userRouter.allowedMethods());
+app.use(agreementRouter.routes());
+app.use(agreementRouter.allowedMethods());
+app.use(accountRouter.routes());
+app.use(accountRouter.allowedMethods());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
 (async () => {
     try {
-        await db.sequelize.sync({ alter: true })
-        console.log('db created.')
-        app.listen(config.port);
+        await app.listen(config.port);
+        console.log('app start.')
     } catch (error) {
-        console.error(error.message);
+        console.log({error: error.originalError ? error.originalError.message : error.message});
     }
 
 })();

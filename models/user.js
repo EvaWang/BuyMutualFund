@@ -28,12 +28,17 @@ module.exports = (sequelize, DataTypes) => {
     AuthStatus: { type: DataTypes.INTEGER, allowNull: false, defaultValue: -1 },
     // valid user: 1, deleted user: 0
     IsValid: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+    // common user: 0, super user: 1
+    IsSuperUser: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0}, 
     CreateTime: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now() },
     UpdateTime: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now() },
   }, {
     timestamps: false,
     sequelize,
     modelName: 'User',
+    indexes: [
+      { unique: true, fields: ['UserName'] },
+    ]
   });
   return User;
 };
