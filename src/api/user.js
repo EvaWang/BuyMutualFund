@@ -80,20 +80,19 @@ userRouter
             }
             return;
         }
-
+        
         ctx.body = {
-            token: jsonwebtoken.sign({
-                data: { userId: user.id, username: user.UserName, isSuperUser: user.IsSuperUser },
-                //exp in seconds
-                expiresIn: '2h'
-            }, config.secret)
+            token: jsonwebtoken.sign(
+                {data: { userId: user.id, username: user.UserName, isSuperUser: user.IsSuperUser }},
+                config.secret,
+                { expiresIn: '2h' })
         }
         next();
     })
     .get('/user/get', async (ctx, next) => {
         // TODO: show account balance
         const tokenStr = ctx.header.authorization.split(' ')[1]
-        const decoded = jsonwebtoken.verify(tokenStr, config.secret);
+        const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         let user = await UserCtl.getUserById(decoded.data.userId);
         user.Password = ""
@@ -103,7 +102,7 @@ userRouter
     })
     .get('/user/checkAgreement', async (ctx, next) => {
         const tokenStr = ctx.header.authorization.split(' ')[1]
-        const decoded = jsonwebtoken.verify(tokenStr, config.secret);
+        const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
         let user = await UserCtl.getUserById(decoded.data.userId);
 
         const agreement = await UserCtl.checkAgreementSigned()
@@ -125,7 +124,7 @@ userRouter
     })
     .post('/user/signAgreement', async (ctx, next) => {
         const tokenStr = ctx.header.authorization.split(' ')[1]
-        const decoded = jsonwebtoken.verify(tokenStr, config.secret);
+        const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         let user = await UserCtl.getUserById(decoded.data.userId);
         console.log(user)

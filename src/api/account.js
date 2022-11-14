@@ -80,7 +80,7 @@ accountRouter
     .post('/account/deposit', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
-        const decoded = jsonwebtoken.verify(tokenStr, config.secret);
+        const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         if (!ctx.request.body.money ||
             !ctx.request.body.currency) {
@@ -105,7 +105,7 @@ accountRouter
     .post('/account/draw', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
-        const decoded = jsonwebtoken.verify(tokenStr, config.secret);
+        const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         if (!ctx.request.body.money ||
             !ctx.request.body.currency) {
