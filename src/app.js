@@ -9,8 +9,7 @@ const jwt = require('koa-jwt');
 const {userRouter} = require('./api/user')
 const {agreementRouter} = require('./api/agreement')
 const {accountRouter} = require('./api/account')
-// const {userRouter, UserCtl} = require('./api/user')
-// const {agreementRouter, AgreementCtl} = require('./api/agreement')
+const {fundRouther} = require('./api/fund')
 const config = require('../config/appConfig.js')
 
 const app = new Koa();
@@ -59,6 +58,8 @@ app.use(agreementRouter.routes());
 app.use(agreementRouter.allowedMethods());
 app.use(accountRouter.routes());
 app.use(accountRouter.allowedMethods());
+app.use(fundRouther.routes());
+app.use(fundRouther.allowedMethods());
 app.use(router.routes());
 app.use(router.allowedMethods());
 

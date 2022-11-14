@@ -55,7 +55,6 @@ let AccountCtl = {
 
         try {
             const result = await db.sequelize.transaction(async (t) => {
-                console.log("=======start=========");
                 const accountLog = await db.AccountLog.create({
                     AccountId: account.id,
                     Value: -money,
