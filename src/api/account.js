@@ -24,7 +24,7 @@ let AccountCtl = {
             const result = await db.sequelize.transaction(async (t) => {
                 const [account, created] = await db.Account.findOrCreate({
                     where: { UserId: userId, Currency: currency },
-                    defaults: { UserId: userId, Currency: currency, Balance: 0 },
+                    defaults: { UserId: userId, Currency: currency },
                     transaction: t
                 });
                 const accountLog = await db.AccountLog.create({

@@ -94,11 +94,31 @@ userRouter
         const tokenStr = ctx.header.authorization.split(' ')[1]
         const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
-        let user = await UserCtl.getUserById(decoded.data.userId);
-        user.Password = ""
-        ctx.status = 200;
-        ctx.body = JSON.stringify(user)
-        next();
+        try{
+            const user = await UserCtl.getUserById(decoded.data.userId);
+            const accounts = await db.Account.findAll({
+                where: { UserId: user.id}
+            });
+
+            qryBoughtFunds = " select funds.name, funds.currency, fundinvestments.TotalUnit, "+
+            " nav.value,(nav.value*fundinvestments.TotalUnit) as currentVal from fundinvestments "+
+            " left join funds on fundinvestments.fundid = funds.id "+
+            " left join (select fundid, value , max(CreateTime) from fundnavs group by fundid) as nav on funds.id = nav.fundid "+
+            ` where fundinvestments.userid = ${user.id} ;`
+            const funds = await db.sequelize.query(qryBoughtFunds);
+           
+            ctx.status = 200;
+            ctx.body = {
+                User:{Name: user.UserName, AuthStatus:user.AuthStatus}, 
+                Accounts:accounts, 
+                Funds:funds[0]
+            }
+        }catch(err){
+            ctx.status = 500;
+            ctx.body = {error: err.originalError ? err.originalError.message : err.message}
+            return;
+        }
+        
     })
     .get('/user/checkAgreement', async (ctx, next) => {
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -120,15 +140,14 @@ userRouter
 
         ctx.status = 200;
         ctx.body = res;
-        next();
     })
     .post('/user/signAgreement', async (ctx, next) => {
         const tokenStr = ctx.header.authorization.split(' ')[1]
         const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         let user = await UserCtl.getUserById(decoded.data.userId);
-        console.log(user)
-        console.log(user.AuthStatus)
+        // console.log(user)
+        // console.log(user.AuthStatus)
         const agreement = await UserCtl.checkAgreementSigned()
         if (user.AuthStatus === agreement.id){
             ctx.status = 200;
@@ -142,7 +161,6 @@ userRouter
             const [results, metadata] = await db.sequelize.query(updateStatement);
             ctx.status = 200;
             ctx.body = "You signed the latest agreement. Agreement Title: "+agreement.Title;
-            next()
         }catch(err){
             ctx.status = 400;
             ctx.body = {error: err.originalError ? err.originalError.message : err.message}

@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'FundInvestment',
     indexes: [
-      { unique: true, fields: ['UserId', 'FundId'] },
+      // { unique: true, fields: ['UserId', 'FundId'] },
     ]
   });
   return FundInvestment;

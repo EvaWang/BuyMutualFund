@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
     indexes: [
-      { unique: true, fields: ['UserName'] },
+      { unique: true, fields: ['UserName'], using: 'BTREE',},
     ]
   });
   return User;

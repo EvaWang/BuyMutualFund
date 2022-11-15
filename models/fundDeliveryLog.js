@@ -23,9 +23,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     UserId: { type: DataTypes.INTEGER, allowNull: false, defaultValue: "" },
     FundId: { type: DataTypes.INTEGER, allowNull: false, defaultValue: "" },
-    Price: { type: DataTypes.DECIMAL, allowNull: false, defaultValue: 0 },
-    // 1: to be fulfill, 2: fulfilled, 3: failed.
+    Unit: { type: DataTypes.DECIMAL, allowNull: false, defaultValue: 0 },
+    // 1: to be fulfill, 2: fulfilled, 3: failed, 4: transaction done
     Status: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+    Memo: { type: DataTypes.STRING, allowNull: false, defaultValue: "" },
     CreateTime: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now() },
   }, {
     timestamps: false,
