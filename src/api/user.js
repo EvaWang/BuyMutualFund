@@ -96,6 +96,10 @@ userRouter
 
         try{
             const user = await UserCtl.getUserById(decoded.data.userId);
+            if (!user){
+                throw new Error("Invalid usre.")
+            }
+
             const accounts = await db.Account.findAll({
                 where: { UserId: user.id}
             });

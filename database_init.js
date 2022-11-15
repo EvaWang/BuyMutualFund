@@ -37,6 +37,16 @@ const config = require('./config/appConfig.js');
             {Name: "FundB TWD", FundTypeId: 3, Currency: 1, Prospectus:"Long long content 5."},
             {Name: "FundB EU", FundTypeId: 4, Currency: 2, Prospectus:"Long long content 6."},
         ]);
+
+        await db.FundNAV.bulkCreate([
+            { FundId: 1, Value: Math.random() * 10 },
+            { FundId: 2, Value: Math.random() * 10 },
+            { FundId: 3, Value: Math.random() * 10 },
+            { FundId: 4, Value: Math.random() * 10 },
+            { FundId: 5, Value: Math.random() * 10 },
+            { FundId: 6, Value: Math.random() * 10 },
+        ]);
+
         console.log('db created.')
     } catch (error) {
         console.log(error)
