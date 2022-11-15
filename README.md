@@ -1,6 +1,17 @@
 # BuyMutualFund
 interview project
 
+## init project
+```
+# initalize 
+npm install
+GenInitData=1 node ./database_init.js 
+
+# start app
+node ./src/app.js
+```
+
+## Ref
 node@14
 npm i --save koa
 npm install --save koa-jwt

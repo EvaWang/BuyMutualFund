@@ -46,7 +46,7 @@ let FundCtl = {
         const account = await db.Account.findOne({ where: { UserId: userId, Currency: fund.Currency } });
         const cost = fund.Value * unit * (1 + fund.Fee / 100.)
         if (!account || account.Balance < cost) {
-            const fundDeliveryLog = await db.FundDeliveryLog.create({
+            await db.FundDeliveryLog.create({
                 UserId: userId,
                 FundId: fundId,
                 Unit: unit,
@@ -68,10 +68,9 @@ let FundCtl = {
                 FundId: fundId,
             }
         });
-        // console.log(`userId: ${userId},fundId:${fundId}, investmentInit: ${investmentInit.TotalUnit}`)
 
-        const result = await db.sequelize.transaction(async (t) => {
-            const fundDeliveryLog = await db.FundDeliveryLog.create({
+        await db.sequelize.transaction(async (t) => {
+            await db.FundDeliveryLog.create({
                 UserId: userId,
                 FundId: fundId,
                 Unit: unit,
@@ -79,16 +78,15 @@ let FundCtl = {
             }, { transaction: t });
 
             if (status === 2) {
-                // console.log('update unit: '+(investmentInit.TotalUnit + unit))
-                const fundInvestment = await db.FundInvestment.update(
+                // duplicate code
+                await db.FundInvestment.update(
                     { TotalUnit: investmentInit.TotalUnit + unit },
                     { where: { id: investmentInit.id }, transaction: t })
-                // duplicate code
-                const accountLog = await db.AccountLog.create({
+                await db.AccountLog.create({
                     AccountId: account.id,
                     Value: -cost,
                 }, { transaction: t });
-                const updateAccount = await db.Account.update(
+                await db.Account.update(
                     { Balance: account.Balance - cost },
                     { where: { id: account.id }, transaction: t })
             }
@@ -116,7 +114,7 @@ let FundCtl = {
 
         const account = await db.Account.findOne({ where: { UserId: userId, Currency: fund.Currency } });
         await db.sequelize.transaction(async (t) => {
-            const fundDeliveryLog = await db.FundDeliveryLog.create({
+            await db.FundDeliveryLog.create({
                 UserId: userId,
                 FundId: fundId,
                 Unit: -unit,
@@ -124,10 +122,10 @@ let FundCtl = {
             }, { transaction: t });
     
             if (status === 2){
+                // duplicate code
                 await db.FundInvestment.update(
                     { TotalUnit: fundInvestment.TotalUnit - unit },
                     { where: { id: fundInvestment.id }, transaction: t })
-                // duplicate code
                 await db.AccountLog.create({
                     AccountId: account.id,
                     Value: earn,
@@ -174,7 +172,6 @@ let FundCtl = {
         const result = await db.sequelize.transaction(async (t) => {
             const fundInvestment = await db.FundInvestment.findOne({ where: { UserId: item.UserId, FundId: item.FundId } })
 
-            // cost = item.nav * item.Unit * (1+)
             cost = item.nav * item.Unit * (1-item.Fee/100)
             
             if (cost > item.Balance) {

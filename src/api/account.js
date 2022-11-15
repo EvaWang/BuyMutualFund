@@ -55,11 +55,11 @@ let AccountCtl = {
 
         try {
             const result = await db.sequelize.transaction(async (t) => {
-                const accountLog = await db.AccountLog.create({
+                await db.AccountLog.create({
                     AccountId: account.id,
                     Value: -money,
                 }, { transaction: t });
-                const updateAccount = await db.Account.update(
+                await db.Account.update(
                     { Balance: account.Balance - money }, 
                     { where: { id: account.id }, transaction: t})
             });
@@ -90,7 +90,7 @@ accountRouter
             return;
         }
         try {
-            const res = await AccountCtl.deposit(decoded.data.userId, ctx.request.body.money, ctx.request.body.currency)
+            await AccountCtl.deposit(decoded.data.userId, ctx.request.body.money, ctx.request.body.currency)
             ctx.status = 200;
             ctx.body = `${ctx.request.body.money} saved.`;
             // ctx.body = JSON.stringify(res);
@@ -115,7 +115,7 @@ accountRouter
             return;
         }
         try {
-            const res = await AccountCtl.draw(decoded.data.userId, ctx.request.body.money, ctx.request.body.currency)
+            await AccountCtl.draw(decoded.data.userId, ctx.request.body.money, ctx.request.body.currency)
             ctx.status = 200;
             ctx.body = `${ctx.request.body.money} drew.`;
         } catch (err) {

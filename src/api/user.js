@@ -146,8 +146,6 @@ userRouter
         const decoded = await jsonwebtoken.verify(tokenStr, config.secret);
 
         let user = await UserCtl.getUserById(decoded.data.userId);
-        // console.log(user)
-        // console.log(user.AuthStatus)
         const agreement = await UserCtl.checkAgreementSigned()
         if (user.AuthStatus === agreement.id){
             ctx.status = 200;
