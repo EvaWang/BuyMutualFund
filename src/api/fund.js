@@ -1,4 +1,4 @@
-const fundRouther = require('koa-router')();
+const fundRouter = require('koa-router')();
 const jsonwebtoken = require('jsonwebtoken');
 var moment = require('moment');
 
@@ -215,7 +215,23 @@ let FundCtl = {
     }
 };
 
-fundRouther
+fundRouter
+/**
+   * @swagger
+   * /fund/updateNAV:
+   *   post:
+   *     description: (Admin Only) update NAV. 
+   *     tags: [fund]
+   *     produces:
+   *       - application/json
+   *     parameters:
+
+   *     responses:
+   *       200:
+   *         description: updated.
+   *       500:
+   *         description: unexpected error
+   */   
     .post('/fund/updateNAV', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -238,6 +254,22 @@ fundRouther
             ctx.body = { error: err.originalError ? err.originalError.message : err.message }
         }
     })
+/**
+   * @swagger
+   * /fund/getList:
+   *   get:
+   *     description: get fund list.
+   *     tags: [fund]
+   *     produces:
+   *       - application/json
+   *     parameters:
+
+   *     responses:
+   *       200:
+   *         description: return fund list.
+   *       500:
+   *         description: unexpected error
+   */   
     .get('/fund/getList', async (ctx, next) => {
         try {
             const funds = await FundCtl.getFundById();
@@ -248,6 +280,31 @@ fundRouther
             ctx.body = { error: err.originalError ? err.originalError.message : err.message }
         }
     })
+/**
+   * @swagger
+   * /fund/buy:
+   *   post:
+   *     description: buy funds.
+   *     tags: [fund]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: fundId
+   *         description: which fund
+   *         required: true
+   *         type: integer
+   *       - name: unit
+   *         description: quantity
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: (in working hours)bought / (order enqueue)pending
+   *       400:
+   *         description: lack for required params / balance insufficient 
+   *       500:
+   *         description: unexpected error
+   */   
     .post('/fund/buy', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -270,6 +327,31 @@ fundRouther
             ctx.body = { error: err.originalError ? err.originalError.message : err.message }
         }
     })
+/**
+   * @swagger
+   * /fund/sell:
+   *   post:
+   *     description: sell funds.
+   *     tags: [fund]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: fundId
+   *         description: which fund
+   *         required: true
+   *         type: integer
+   *       - name: unit
+   *         description: quantity
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: (in working hours)sold / (order enqueue)pending
+   *       400:
+   *         description: lack for required params / sell more than inventory
+   *       500:
+   *         description: unexpected error
+   */       
     .post('/fund/sell', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -285,6 +367,22 @@ fundRouther
             ctx.body = { error: err.originalError ? err.originalError.message : err.message }
         }
     })
+/**
+   * @swagger
+   * /fund/fulfill:
+   *   post:
+   *     description: (Admin Only) deal with pending orders
+   *     tags: [fund]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *
+   *     responses:
+   *       200:
+   *         description: all done.
+   *       500:
+   *         description: unexpected error
+   */       
     .post('/fund/fulfill', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -310,4 +408,4 @@ fundRouther
 
     });
 
-module.exports = { fundRouther, FundCtl };
+module.exports = { fundRouter, FundCtl };

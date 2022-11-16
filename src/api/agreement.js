@@ -13,6 +13,33 @@ let AgreementCtl = {
 }
 
 agreementRouter
+/**
+   * @swagger
+   * /agreement/add:
+   *   post:
+   *     description: (Admin Only) add a new agreement. 
+   *     tags: [agreement]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: title
+   *         description: agreement title
+   *         required: true
+   *         type: string
+   *       - name: content
+   *         description: agreement content
+   *         required: true
+   *         type: string
+   *     responses:
+   *       200:
+   *         description: drawed.
+   *       400:
+   *         description: lack for required params/ insufficient balance
+   *       401:
+   *         description: admin only. current usr is not a super user.
+   *       500:
+   *         description: unexpected error
+   */   
     .post('/agreement/add', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]

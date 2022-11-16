@@ -1,5 +1,3 @@
-// deposit
-// draw
 const accountRouter = require('koa-router')();
 const jsonwebtoken = require('jsonwebtoken');
 
@@ -76,6 +74,31 @@ let AccountCtl = {
 }
 
 accountRouter
+/**
+   * @swagger
+   * /account/deposit:
+   *   post:
+   *     description: save money to a account.
+   *     tags: [account]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: money
+   *         description: how much money
+   *         required: true
+   *         type: decimal
+   *       - name: currency
+   *         description: currency, 1(TWD), 2(USD), 3(EURO)
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: saved.
+   *       400:
+   *         description: lack for required params
+   *       500:
+   *         description: unexpected error
+   */
     .post('/account/deposit', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
@@ -101,6 +124,31 @@ accountRouter
             return;
         }
     })
+/**
+   * @swagger
+   * /account/draw:
+   *   post:
+   *     description: draw money from a account.
+   *     tags: [account]
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: money
+   *         description: how much money
+   *         required: true
+   *         type: decimal
+   *       - name: currency
+   *         description: currency, currency, 1(TWD), 2(USD), 3(EURO)
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: drawed.
+   *       400:
+   *         description: lack for required params/ insufficient balance
+   *       500:
+   *         description: unexpected error
+   */    
     .post('/account/draw', async (ctx, next) => {
         // TODO: reuse function
         const tokenStr = ctx.header.authorization.split(' ')[1]
