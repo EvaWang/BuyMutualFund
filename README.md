@@ -12,7 +12,8 @@ node ./src/app.js
 ```
 
 ## Ref
-node@14
+```
+# node@14
 npm i --save koa
 npm install --save koa-jwt
 npm install --save koa-router
@@ -22,3 +23,4 @@ npm i koa-body
 npm install --save sequelize-cli
 npm i jsonwebtoken
 npm install koa2-swagger-ui swagger-jsdoc --save
+```
