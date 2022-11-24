@@ -1,6 +1,8 @@
 # BuyMutualFund
 - interview project
 - a small restfull api server that customers can deposit/draw money and buy mutual funds.
+- api document: http://localhost:3000/public/swagger
+- test: postman
 
 ## init project
 ```
