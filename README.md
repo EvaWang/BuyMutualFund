@@ -1,5 +1,6 @@
 # BuyMutualFund
-interview project
+- interview project
+- a small restfull api server that customers can deposit/draw money and buy mutual funds.
 
 ## init project
 ```
