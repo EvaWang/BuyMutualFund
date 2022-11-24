@@ -11,6 +11,10 @@ GenInitData=1 node ./database_init.js
 node ./src/app.js
 ```
 
+## TODO: 
+- duplicate codes
+- db index design
+
 ## Ref
 ```
 # node@14
